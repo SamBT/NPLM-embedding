@@ -1,14 +1,25 @@
-#!/bin/bash                                                                                                       
-#SBATCH -c 1                 # Number of cores (-c)                                                               
-#SBATCH --gpus 1                                                                                                  
-#SBATCH -t 0-01:00           # Runtime in D-HH:MM, minimum of 10 minutes                                          
-#SBATCH -p gpu          # Partition to submit to                                                             
-#SBATCH --mem=20000           # Memory pool for all cores (see also --mem-per-cpu)                                 
-#SBATCH -o toy_myoutput_%j.out  # File to which STDOUT will be written, %j inserts jobid            
-#SBATCH -e toy_myerrors_%j.err  # File to which STDERR will be written, %j inserts jobid            
+#!/bin/bash
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=1
+#SBATCH -t 0-01:00
+#SBATCH --mem=16G
+#SBATCH -o slurm_logs/job_%j.out
+#SBATCH -e slurm_logs/job_%j.err
 
-# load modules                                                                                                    
-module load python/3.10.9-fasrc01
-module load cuda/11.8.0-fasrc01
-# run code                                                                                                        
-python toy.py -m h_4 -s 0 -b 10000 -r 50000 -t 100 -l 5
+# load modules
+source ~/.bash_profile
+mamba activate torch_gpu
+
+cd /n/home11/sambt/contrastive_anomaly/training_JetClass/NPLM-embedding
+
+dim=$1
+temp=$2
+inputs=$3
+nref=$4
+nbkg=$5
+nsig=$6
+
+python toy.py --dim $dim --temp $temp --inputs $inputs -r $nref -b $nbkg -s $nsig -t 100 -l 4 --fractions

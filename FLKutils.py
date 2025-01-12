@@ -54,7 +54,7 @@ def compute_t(preds,Y,weight):
 
 
 def run_toy(test_label, X_train, Y_train, weight, flk_config, seed,
-            plot=False, verbose=False, savefig=False, output_path='', df=10, binsrange=None, yrange=None, xlabels=None):
+            plot=False, verbose=False, savefig=False, output_path='', df=10, binsrange=None, yrange=None, xlabels=[]):
     '''                                                                                                                     
     type of signal: "NP0", "NP1", "NP2", "NP3"                                                                              
     output_path: directory (inside ./runs/) where to save results                                                           
@@ -68,7 +68,7 @@ def run_toy(test_label, X_train, Y_train, weight, flk_config, seed,
     '''
 
     if not os.path.exists(output_path):
-      os.makedirs(output_path, exist_ok=True)
+        os.makedirs(output_path, exist_ok=True)
     dim = X_train.shape[1]                                                                                                        
     flk_config['seed']=seed # select different centers for different toys                                                   
     st_time = time.time()
